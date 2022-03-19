@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: doldolseo-xxx-rest
+spec:
+  selector:
+   app: openjdk_xxx
+  ports:
+    - name: tomcat
+      protocol : TCP
+      port : 8080
+      targetPort: 8080
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: doldolseo-xxx-rest
+spec:
+  selector:
+    matchLabels:
+      app: openjdk_xxx
+  replicas: 2 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: openjdk_xxx
+    spec:
+      containers:
+      - name: openjdk
+        image: kki7823/doldolseo-rest-xxx:tagname
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - mountPath: /doldolseo/src/main/resources/static
+          name: xxx-resource-volume
+      volumes:
+      - name: xxx-resource-volume
+        hostPath:
+          path: /mnt/volumes-rest-resource/doldolseo-xxx-resource
+          type: Directory

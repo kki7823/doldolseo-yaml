@@ -1,0 +1,74 @@
+# Database Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: db
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: doldolseo-lr-db
+  namespace: db
+spec:
+  limits:
+  - default:
+      cpu: 100m
+      memory: 600Mi
+  - max:
+      cpu: 100m
+      memory: 600Mi
+    min:
+      cpu: 80m
+      memory: 500Mi
+    type: Container
+---
+# Rest Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rest
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: doldolseo-lr-rest
+  namespace: rest
+spec:
+  limits:
+  - default:
+      cpu: 100m
+      memory: 600Mi
+  - max:
+      cpu: 100m
+      memory: 600Mi
+    min:
+      cpu: 80m
+      memory: 500Mi
+    type: Container
+---
+# Gateway Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gw
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: doldolseo-lr-gw
+  namespace: gw
+spec:
+  limits:
+  - default:
+      cpu: 250m
+      memory: 600Mi
+    defaultRequest:
+      cpu: 250m
+      memory: 600Mi
+    max:
+      cpu: 350m
+      memory: 600Mi
+    min:
+      cpu: 250m
+      memory: 500Mi
+    type: Container

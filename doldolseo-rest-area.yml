@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: doldolseo-area-rest
+  namespace: rest
+spec:
+  selector:
+   app: openjdk_area
+  ports:
+    - name: tomcat
+      protocol : TCP
+      port : 8080
+      targetPort: 8080
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: doldolseo-area-rest
+  namespace: rest
+spec:
+  selector:
+    matchLabels:
+      app: openjdk_area
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: openjdk_area
+    spec:
+      containers:
+      - name: openjdk
+        image: kki7823/doldolseo-rest-area:1.2.3arm
+        #image: kki7823/doldolseo-rest-area:1.2.3amd
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - mountPath: /doldolseo/src/main/resources/static
+          name: area-resource-volume
+      volumes:
+      - name: area-resource-volume
+        hostPath:
+          path: /mnt/volumes-rest-resource/doldolseo-area-resource
+          type: Directory

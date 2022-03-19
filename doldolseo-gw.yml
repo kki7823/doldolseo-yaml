@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: doldolseo-gw
+spec:
+  selector:
+   app: openjdk_gw
+  ports:
+    - name: spring-cloud-gw
+      protocol : TCP
+      port : 9000
+      targetPort: 9000
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: doldolseo-gw
+spec:
+  selector:
+    matchLabels:
+      app: openjdk_gw
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: openjdk_gw
+    spec:
+      containers:
+      - name: openjdk
+        image: kki7823/doldolseo-gw:1.2.7arm64
+        #image: kki7823/doldolseo-gw:1.2.7amd64
+        resources:
+           limits:
+             cpu: 300m
+           requests:
+             cpu: 200m
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - mountPath: /doldolseo/src/main/resources/key
+          name: area-resource-volume
+      volumes:
+      - name: area-resource-volume
+        hostPath:
+          path: /mnt/volumes-gw-resource/doldolseo-gw-resource
+          type: Directory

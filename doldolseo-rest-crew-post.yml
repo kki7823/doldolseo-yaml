@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: doldolseo-crew-post-rest
+  namespace: rest
+spec:
+  selector:
+   app: openjdk_crew_post
+  ports:
+    - name: tomcat
+      protocol : TCP
+      port : 8080
+      targetPort: 8080
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: doldolseo-crew-post-rest
+  namespace: rest
+spec:
+  selector:
+    matchLabels:
+      app: openjdk_crew_post
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: openjdk_crew_post
+    spec:
+      containers:
+      - name: openjdk
+        image: kki7823/doldolseo-rest-crew-post:1.1.2arm64
+        #image: kki7823/doldolseo-rest-crew-post:1.1.2amd64
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - mountPath: /doldolseo/src/main/resources/static
+          name: crew-post-resource-volume
+      volumes:
+      - name: crew-post-resource-volume
+        hostPath:
+          path: /mnt/volumes-rest-resource/doldolseo-crew-post-resource
+          type: Directory
